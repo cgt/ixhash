@@ -1,6 +1,6 @@
 // Package ixhash implements the iXhash fuzzy e-mail hashing algorithms
 // and provides facilities for checking iXhash digests against DNS lists.
-package ixhash
+package ixhash // import "cgt.name/pkg/ixhash"
 
 import (
 	"bytes"
