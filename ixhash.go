@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
+	"net"
 	"regexp"
 	"unicode"
 )
@@ -183,4 +184,12 @@ func All(msg []byte) [3]string {
 	ret[2] = ThirdHash(b)
 
 	return ret
+}
+
+func Lookup(zone, digest string) (bool, error) {
+	addrs, err := net.LookupHost(digest + "." + zone)
+	if err != nil {
+		return false, err
+	}
+	return len(addrs) > 0, nil
 }
