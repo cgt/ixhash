@@ -136,10 +136,8 @@ func SecondHash(msg []byte) string {
 	return md5hash(msg)
 }
 
-var reThirdHashOne = regexp.MustCompile(`[[:cntrl:][:space:]=]+`)
-
 // ThirdHash computes the third iXhash digest.
-// ThirdHash mutates the provided msg []byte.
+// ThirdHash does not mutate the provided msg []byte.
 // ThirdHash requires that the message contain at least eight consecutive
 // non-space characters.
 func ThirdHash(msg []byte) string {
@@ -161,9 +159,15 @@ func ThirdHash(msg []byte) string {
 		return ""
 	}
 
-	msg = reThirdHashOne.ReplaceAll(msg, []byte{})
-	msg = squeeze(msg, graphPCRE)
-	return md5hash(msg)
+	buf := make([]byte, 0, len(msg))
+	for _, b := range msg {
+		r := rune(b)
+		if !(unicode.IsControl(r) || unicode.IsSpace(r) || r == '=') {
+			buf = append(buf, b)
+		}
+	}
+	buf = squeeze(buf, graphPCRE)
+	return md5hash(buf)
 }
 
 // All computes all three hashes of the msg, which should be the body of an
@@ -180,8 +184,8 @@ func All(msg []byte) [3]string {
 	copy(b, msg)
 	ret[1] = SecondHash(b)
 
-	copy(b, msg)
-	ret[2] = ThirdHash(b)
+	// ThirdHash does not mutate the slice.
+	ret[2] = ThirdHash(msg)
 
 	return ret
 }
