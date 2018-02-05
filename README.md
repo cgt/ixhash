@@ -5,6 +5,9 @@
 Package ixhash implements the iXhash fuzzy e-mail hashing algorithms
 and provides facilities for checking iXhash digests against DNS lists.
 
+**Note: Not necessarily compatible with the SpamAssassin plugin.
+This is a [bug](https://github.com/cgt/ixhash/issues/1).**
+
 ## Installation
 
 ```
